@@ -9,6 +9,9 @@ class Directory(override val parentPath: String, override val name: String, val 
   def getType = "Directory"
   def asDirectory: Directory = this
   def asFile = throw new FileSystemException("Can not convert into File")
+  def isRoot: Boolean = parentPath.isEmpty
+  def isDirectory: Boolean = true
+  def isFile: Boolean = false
 
   def getAllFoldersInPath: List[String] = path.substring(1).split(Directory.SEPARATOR).toList.filter(e => !e.isEmpty)
   // /a/b/c => List['a','b','c']

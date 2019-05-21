@@ -6,6 +6,8 @@ class File(override val parentPath: String, override val name: String, val conte
   def asDirectory: Directory = throw new FileSystemException(" Can not converted to Directory.")
   def asFile: File = this
   def getType = "File"
+  def isDirectory: Boolean = false
+  def isFile: Boolean = true
 }
 
 object File{
