@@ -19,6 +19,7 @@ object Command {
   val LS = "ls"
   val PWD = "pwd"
   val TOUCH = "touch"
+  val CD = "cd"
 
   def emptyCommand: Command = new Command {
     override def apply(state: State): State = state
@@ -45,6 +46,9 @@ object Command {
     }else if(TOUCH.equals(tokens(0))){
       if (tokens.length < 2) incompleteCommand(tokens(0))
       else new Touch(tokens(1))
+    }else if(CD.equals(tokens(0))){
+      new Cd(tokens(1))
     }else new UnknownCommand
   }
+
 }

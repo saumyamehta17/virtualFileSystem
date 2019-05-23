@@ -2,6 +2,8 @@ package com.rtjvm.scala.oop.commands
 import com.rtjvm.scala.oop.files.{DirEntry, Directory}
 import com.rtjvm.scala.oop.filesystem.State
 
+import scala.annotation.tailrec
+
 class Cd(dir: String) extends Command {
   /*
     cd /something/somethingelse/.../
@@ -16,7 +18,8 @@ class Cd(dir: String) extends Command {
     // 2. find absolute path of directory I want cd to
     val absolutePath =
       if(dir.startsWith(Directory.SEPARATOR)) dir
-      else wd + Directory.SEPARATOR + dir
+      else if(wd.isRoot) wd.path + dir
+      else wd.path + Directory.SEPARATOR + dir
 
     // 3. find the directory to cd to, given path
     val destinationEntry = doFindEntry(root, absolutePath)
@@ -27,5 +30,23 @@ class Cd(dir: String) extends Command {
     else State(root, destinationEntry.asDirectory)
   }
 
-  def doFindEntry(root: DirEntry, path: String): DirEntry = ???
+  def doFindEntry(root: Directory, path: String): DirEntry = {
+    @tailrec
+    def findEntryHelper(currDirectory: Directory, path: List[String]): DirEntry = {
+      if(path.isEmpty || path.head.isEmpty) currDirectory
+      else if(path.tail.isEmpty) {
+        println("path head in findEntryHelper " + path.head)
+        currDirectory.findEntry(path.head)
+      }
+      else{
+        val nextDir = currDirectory.findEntry(path.head)
+        if (nextDir == null) null
+        else findEntryHelper(nextDir.asDirectory, path.tail)
+      }
+    }
+
+    val tokens: List[String] = path.substring(1).split(Directory.SEPARATOR).toList
+    println("absolute path " + tokens.toString())
+    findEntryHelper(root, tokens)
+  }
 }
