@@ -47,7 +47,8 @@ object Command {
       if (tokens.length < 2) incompleteCommand(tokens(0))
       else new Touch(tokens(1))
     }else if(CD.equals(tokens(0))){
-      new Cd(tokens(1))
+      if (tokens.length < 2) incompleteCommand(tokens(0))
+      else new Cd(tokens(1))
     }else new UnknownCommand
   }
 

@@ -20,7 +20,7 @@ abstract class CreateEntry(name: String) extends Command {
       if(path.isEmpty) currentDirectory.addEntry(newEntry)
       else{
         //        val oldEntry = path.head
-        println("Bug:  " + currentDirectory.findEntry(path.head))
+//        println("Bug:  " + currentDirectory.findEntry(path.head))
         val oldEntry = currentDirectory.findEntry(path.head).asDirectory
         currentDirectory.replaceEntry(oldEntry.name, updateStructure(oldEntry, path.tail, newEntry))
       }

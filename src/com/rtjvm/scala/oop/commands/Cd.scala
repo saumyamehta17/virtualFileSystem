@@ -45,8 +45,33 @@ class Cd(dir: String) extends Command {
       }
     }
 
+
+    // 1. tokens
     val tokens: List[String] = path.substring(1).split(Directory.SEPARATOR).toList
-    println("absolute path " + tokens.toString())
-    findEntryHelper(root, tokens)
+    //println("absolute path " + tokens.toString())
+
+    // 1.5 eliminating / collapse relative tokens
+      /*
+       /a/. => ["a", ".", "."] => ["a"]
+       /a/./. => ["a", ".", "."] => ["a"]
+       /a/..  => ["a", ".."] => []
+       /a/b/.. => ["a", "b", ".."] => ["a"]
+
+       List init - will give list excluding last element
+     */
+    def collapseRelativeTokens(path: List[String], result: List[String] = List()): List[String] = {
+        if(path.isEmpty) result
+        else if(".".equals(path.head)) collapseRelativeTokens(path.tail, result)
+        else if("..".equals(path.head)) {
+          if (result.isEmpty) null
+          else collapseRelativeTokens(path.tail, result.init)
+        }else collapseRelativeTokens(path.tail, result :+ path.head)
+      }
+
+    // 2.
+    val newTokens = collapseRelativeTokens(tokens)
+
+    if (newTokens == null) null
+    else findEntryHelper(root, newTokens)
   }
 }
