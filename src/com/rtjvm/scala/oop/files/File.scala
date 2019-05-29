@@ -8,6 +8,15 @@ class File(override val parentPath: String, override val name: String, val conte
   def getType = "File"
   def isDirectory: Boolean = false
   def isFile: Boolean = true
+
+  def appendContents(contents: String): File = {
+    val newContent = this.contents + "\n" + contents
+    setContents(newContent)
+  }
+  def setContents(contents: String): File = {
+    new File(parentPath, name, contents)
+  }
+
 }
 
 object File{
